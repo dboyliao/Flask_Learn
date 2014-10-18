@@ -1,7 +1,9 @@
 #Files
 
-- app.py: file where all the python code lives.
-
+- app.py: python code for the application
+- sql.py: python code for simulation a database.
+- model.py: database model.
+- test.py: unittest.
 
 Dirs:
 
