@@ -1,0 +1,7 @@
+*.db
+*.pickle
+.DS_Store
+*.ipynb_checkpoints/
+*.python-version
+*.pyc
+
