@@ -1,14 +1,24 @@
 # g is a object in flask used for storing temp data. Its value is reset every request.
-from flask import Flask, render_template, redirect, url_for, request, session, flash, g
+from flask import Flask, render_template, redirect, url_for, request, session, flash
 from functools import wraps
 from flask.ext.sqlalchemy import SQLAlchemy
-import sqlite3
+#import sqlite3
 
 # __name__: the name of current namespace.
 app = Flask(__name__)
 
 app.secret_key = "Dboy"
-app.database = "sample.db"
+
+# # using sqlite3
+# app.database = "sample.db"
+
+# using sqlalchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///posts.db"
+
+# create SQLAlchemy object
+db = SQLAlchemy(app)
+
+from models import *
 
 def login_required(f):
     @wraps(f)
@@ -23,11 +33,15 @@ def login_required(f):
 @app.route("/")
 @login_required
 def home():
-    g.db = connect_db()
-    cur = g.db.execute("select * from posts")
-    posts = [dict(title = row[0], description = row[1]) for row in cur.fetchall()]
-    g.db.close()
+    posts = db.session.query(BlogPost).all()
     return render_template("index_block.html", posts = posts)
+#     # using sqlite3
+#     g.db = connect_db()
+#     cur = g.db.execute("select * from posts")
+#     posts = [dict(title = row[0], description = row[1]) for row in cur.fetchall()]
+#     g.db.close()
+#     return render_template("index_block.html", posts = posts)
+    
 
 @app.route("/welcome")
 def welcome():
@@ -52,8 +66,9 @@ def logout():
     flash("You were just logged out.")
     return redirect(url_for("welcome"))
 
-def connect_db():
-    return sqlite3.connect(app.database)
+# # using sqlite3
+# def connect_db():
+#     return sqlite3.connect(app.database)
 
 if __name__ == "__main__":
     app.run(debug = True, port = 8888)
