@@ -7,13 +7,15 @@ from flask.ext.sqlalchemy import SQLAlchemy
 # __name__: the name of current namespace.
 app = Flask(__name__)
 
-app.secret_key = "Dboy"
-
 # # using sqlite3
 # app.database = "sample.db"
 
-# using sqlalchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///posts.db"
+# #using sqlalchemy with hard coded config
+# app.secret_key = "Dboy"
+# app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///posts.db"
+
+# using sqlalchemy with config imported from config.py
+app.config.from_object("config.DevConfig")
 
 # create SQLAlchemy object
 db = SQLAlchemy(app)
@@ -71,4 +73,4 @@ def logout():
 #     return sqlite3.connect(app.database)
 
 if __name__ == "__main__":
-    app.run(debug = True, port = 8888)
+    app.run(port = 8888)
